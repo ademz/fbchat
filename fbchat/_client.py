@@ -694,7 +694,7 @@ class Client(object):
 
         return groups
 
-    def fetchThreadInfo(self, *thread_ids):
+    def fetchThreadInfo(self, *thread_ids, force_get=False):
         """
         Get threads' info from IDs, unordered
 
@@ -751,6 +751,9 @@ class Client(object):
                     rtn[_id] = User._from_graphql(entry)
                 else:
                     rtn[_id] = Page._from_graphql(entry)
+            elif force_get:
+                _id = entry["thread_key"]["thread_fbid"]
+                rtn[_id] = Group._from_graphql(entry)
             else:
                 raise FBchatException(
                     "{} had an unknown thread type: {}".format(thread_ids[i], entry)
